@@ -29,14 +29,34 @@ class _AppMainScreenState extends State<AppMainScreen> {
           color: kprimaryColor,
           fontWeight: FontWeight.w600,
         ),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Iconsax.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Iconsax.heart), label: "Favorite"),
-          BottomNavigationBarItem(icon: Icon(Iconsax.calendar), label: "Meal Plan"),
-          BottomNavigationBarItem(icon: Icon(Iconsax.setting), label: "Setting"),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Iconsax.home),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              selectedIndex == 1 ? Iconsax.heart5 : Iconsax.heart,
+            ),
+            label: "Favorite",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              selectedIndex == 2 ? Iconsax.calendar5 : Iconsax.calendar,
+            ),
+            label: "Meal Plan",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              selectedIndex == 3 ? Iconsax.setting5 : Iconsax.setting,
+            ),
+            label: "Setting",
+          ),
         ],
         onTap: (index) {
-          setState(() => selectedIndex = index);
+          setState(() {
+            selectedIndex = index;
+          });
         },
       ),
       body: selectedIndex == 0
@@ -60,135 +80,205 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            headerParts(),
-            const SizedBox(height: 20),
-            mySearchBar(),
-            const SizedBox(height: 20),
-            const BannerToExplore(),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: Text(
-                "Categories",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              headerParts(),
+              SizedBox(height: 20),
+              mySearchBar(),
+              SizedBox(height: 20),
+              // for banner
+              const BannerToExplore(),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                  "Categories",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-
-            // Catégories (ligne horizontale scrollable)
-            StreamBuilder<QuerySnapshot>(
-              stream: _firestore.collection('categories').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(
-                    height: 40,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-                final categories = <String>["All"];
-                if (snapshot.hasData) {
-                  for (final d in snapshot.data!.docs) {
-                    final name = (d['name'] ?? '').toString();
-                    if (name.isNotEmpty) categories.add(name);
-                  }
-                }
-                return categoryButtons(categories);
-              },
-            ),
-
-            const SizedBox(height: 20),
-
-            // Le grid remplit l'espace restant
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: selectedCategory == "All"
-                    ? _firestore.collection('recipes').snapshots()
-                    : _firestore
-                        .collection('recipes')
-                        .where('category', isEqualTo: selectedCategory)
-                        .snapshots(),
+              // Categories buttons from Firestore
+              StreamBuilder<QuerySnapshot>(
+                stream: _firestore.collection('App-Category').snapshots(),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                  if (snapshot.hasData) {
+                    List<String> categories = ["All"];
+                    for (var doc in snapshot.data!.docs) {
+                      categories.add(doc['name']);
+                    }
+                    return categoryButtons(categories);
+                  } else {
+                    return CircularProgressIndicator();
                   }
-                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text("No recipes found"));
-                  }
-
-                  return GridView.builder(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: 0.8,
-                    ),
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      final recipe = snapshot.data!.docs[index];
-                      final img = (recipe['image'] ?? '').toString();
-                      final name = (recipe['name'] ?? '').toString();
-                      final desc = (recipe['description'] ?? '').toString();
-
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              spreadRadius: 1,
-                              blurRadius: 5,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-                                child: img.isNotEmpty
-                                    ? Image.network(img, fit: BoxFit.cover)
-                                    : Container(
-                                        color: Colors.grey[200],
-                                        child: const Center(child: Icon(Icons.image_not_supported)),
-                                      ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    name,
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    desc,
-                                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
                 },
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              const Text(
+                "Quick & Easy",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 15),
+              // Recipes from Firestore
+              Container(
+                height: 400, // Hauteur fixe pour éviter les contraintes infinies
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: selectedCategory == "All" 
+                      ? _firestore.collection('Complete-Flutter-App').snapshots()
+                      : _firestore.collection('Complete-Flutter-App')
+                          .where('category', isEqualTo: selectedCategory)
+                          .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 0.8,
+                        ),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final recipe = snapshot.data!.docs[index];
+                          final img = (recipe['image'] ?? '').toString();
+                          final name = (recipe['name'] ?? 'Sans nom').toString();
+                          final time = (recipe['time'] ?? '').toString();
+                          final cal = (recipe['cal'] ?? '0').toString();
+
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: const BorderRadius.vertical(
+                                          top: Radius.circular(15),
+                                        ),
+                                        child: img.isNotEmpty
+                                            ? Image.network(
+                                                img,
+                                                width: double.infinity,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Container(
+                                                color: Colors.grey[200],
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.restaurant,
+                                                    size: 50,
+                                                    color: Colors.grey[400],
+                                                  ),
+                                                ),
+                                              ),
+                                      ),
+                                      Positioned(
+                                        top: 10,
+                                        right: 10,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.withOpacity(0.3),
+                                                spreadRadius: 1,
+                                                blurRadius: 3,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Icon(
+                                            Iconsax.heart,
+                                            size: 16,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Iconsax.clock,
+                                            size: 14,
+                                            color: Colors.grey[600],
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            time.isNotEmpty ? "$time Min" : "- Min",
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Icon(
+                                            Iconsax.flash_1,
+                                            size: 14,
+                                            color: Colors.grey[600],
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            "$cal Cal",
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -199,31 +289,32 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         children: [
-          const Expanded(
-            child: Text(
-              "What are you\ncooking today?",
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                height: 1,
-              ),
+          Text(
+            "What are you\ncooking today?",
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              height: 1,
             ),
           ),
+          Spacer(),
           IconButton(
             onPressed: () {},
             style: IconButton.styleFrom(
-              fixedSize: const Size(55, 55),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              fixedSize: Size(55, 55),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
             ),
-            icon: const Icon(Iconsax.notification),
+            icon: Icon(Iconsax.notification),
           ),
         ],
       ),
     );
   }
 
-  Widget mySearchBar() {
+  Container mySearchBar() {
     return Container(
       width: double.infinity,
       height: 60,
@@ -231,12 +322,18 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(30),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      child: const TextField(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: TextField(
         decoration: InputDecoration(
           hintText: "Search any recipes",
-          hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
-          prefixIcon: Icon(Iconsax.search_normal, color: Colors.grey),
+          hintStyle: TextStyle(
+            color: Colors.grey,
+            fontSize: 16,
+          ),
+          prefixIcon: Icon(
+            Iconsax.search_normal,
+            color: Colors.grey,
+          ),
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(vertical: 15),
         ),
@@ -249,13 +346,17 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: categories.map((category) {
-          final isSelected = selectedCategory == category;
+          bool isSelected = selectedCategory == category;
           return Padding(
             padding: const EdgeInsets.only(right: 12),
             child: GestureDetector(
-              onTap: () => setState(() => selectedCategory = category),
+              onTap: () {
+                setState(() {
+                  selectedCategory = category;
+                });
+              },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 decoration: BoxDecoration(
                   color: isSelected ? kprimaryColor : Colors.grey[200],
                   borderRadius: BorderRadius.circular(25),
@@ -286,7 +387,7 @@ class BannerToExplore extends StatelessWidget {
       width: double.infinity,
       height: 170,
       decoration: BoxDecoration(
-        color: const Color(0xFF71B77A),
+        color: Color(0xFF71B77A),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Stack(
@@ -297,7 +398,7 @@ class BannerToExplore extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   "Cook the best\nrecipes at home",
                   style: TextStyle(
                     height: 1.1,
@@ -306,19 +407,21 @@ class BannerToExplore extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                  child: const Text(
+                  child: Text(
                     "Explore",
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF71B77A),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
