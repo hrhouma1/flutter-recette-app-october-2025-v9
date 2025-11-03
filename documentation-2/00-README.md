@@ -58,6 +58,25 @@ Quiz complet avec 30 questions pour tester vos connaissances sur StreamBuilder e
 
 ---
 
+### 4. [Navigation View All](04-navigation_view_all.md)
+**Niveau** : Débutant à Intermédiaire  
+**Durée de lecture** : ~20 minutes
+
+Explique comment implémenter la navigation vers une page "View All" qui affiche toutes les recettes.
+
+**Contenu** :
+- Architecture de la navigation Flutter
+- Bouton "View all" avec Navigator.push()
+- Page view_all_items.dart complète
+- Widget RecipeCard réutilisable
+- Gestion du Stream Firestore avec filtres
+- 5 diagrammes Mermaid (flux, séquence, structure)
+- Bonnes pratiques et améliorations possibles
+
+**Idéal pour** : Comprendre la navigation et création de pages dynamiques
+
+---
+
 ## 🎯 Par où commencer ?
 
 ### Si vous êtes nouveau sur le projet

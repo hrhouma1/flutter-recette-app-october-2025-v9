@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants.dart';
+import 'view_all_items.dart';
 
 class AppMainScreen extends StatefulWidget {
   const AppMainScreen({Key? key}) : super(key: key);
@@ -118,22 +119,51 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              const Text(
-                "Quick & Easy",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              // Titre "Quick & Easy" avec bouton "View all"
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Quick & Easy",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  // Bouton "View all" qui navigue vers la page complète
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ViewAllItems(
+                            categoryTitle: "Quick & Easy",
+                            categoryName: null, // null = toutes les recettes
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      "View all",
+                      style: TextStyle(
+                        color: kprimaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 15),
-              // Recipes from Firestore
+              // Recipes from Firestore (limité à 4 items pour l'aperçu)
               Container(
                 height: 400, // Hauteur fixe pour éviter les contraintes infinies
                 child: StreamBuilder<QuerySnapshot>(
                   stream: selectedCategory == "All" 
-                      ? _firestore.collection('details').snapshots()
+                      ? _firestore.collection('details').limit(4).snapshots()
                       : _firestore.collection('details')
                           .where('category', isEqualTo: selectedCategory)
+                          .limit(4)
                           .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
