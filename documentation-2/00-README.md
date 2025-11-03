@@ -102,6 +102,40 @@ Analyse approfondie et objective des deux approches architecturales pour Flutter
 
 ---
 
+### 6. [Études de Cas Pratiques](06-etudes_de_cas_pratiques.md)
+**Niveau** : Intermédiaire à Avancé  
+**Durée** : ~90 minutes (exercice interactif)
+
+10 études de cas réelles pour pratiquer le choix architectural entre StreamBuilder et Firebase Functions.
+
+**Contenu** :
+- 10 applications réelles décrites en détail
+- Grille d'analyse pour chaque cas
+- Réponses en format accordéon (menu déroulant)
+- Justifications complètes avec code
+- Tableau récapitulatif
+- Score d'analyse pour chaque critère
+
+**Applications couvertes** :
+1. TodoList collaborative (StreamBuilder)
+2. Marketplace de services (Functions)
+3. App de recettes (StreamBuilder) ← Projet actuel
+4. App bancaire (Functions obligatoire)
+5. Réseau social de quartier (Hybride)
+6. App de fitness (Functions)
+7. Portfolio développeur (StreamBuilder)
+8. Plateforme e-learning (Functions)
+9. Météo collaborative (Hybride)
+10. Réservation restaurants (Functions)
+
+**Idéal pour** :
+- Pratiquer la prise de décision architecturale
+- Travaux en groupe et débats
+- Examens et évaluations
+- Comprendre les nuances de chaque approche
+
+---
+
 ## 🎯 Par où commencer ?
 
 ### Si vous êtes nouveau sur le projet
@@ -121,8 +155,16 @@ Analyse approfondie et objective des deux approches architecturales pour Flutter
 
 ### Si vous vous interrogez sur l'architecture
 - **Décision rapide** : [Guide de décision en 2 minutes](DECISION_RAPIDE.md)
-- **Analyse complète** : [StreamBuilder vs Functions (40 min)](05-approche_critique_firebase_functions.md)
+- **Analyse théorique** : [StreamBuilder vs Functions (40 min)](05-approche_critique_firebase_functions.md)
+- **Pratique avec cas réels** : [10 Études de cas (90 min)](06-etudes_de_cas_pratiques.md)
 - Idéal pour les débats en classe ou en équipe
+
+### Pour les professeurs et formateurs
+- Utilisez les [Études de cas pratiques](06-etudes_de_cas_pratiques.md) comme exercice en classe
+- Format accordéon : les étudiants analysent, puis vérifient leurs réponses
+- 10 applications variées de complexité croissante
+- Justifications détaillées avec code d'exemple
+- Parfait pour travaux de groupe et discussions
 
 ---
 
