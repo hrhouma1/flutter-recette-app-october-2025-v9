@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
+import '../Provider/favorite_provider.dart';
 import 'view_all_items.dart';
 
 class AppMainScreen extends StatefulWidget {
@@ -224,24 +226,35 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                                       Positioned(
                                         top: 10,
                                         right: 10,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey.withOpacity(0.3),
-                                                spreadRadius: 1,
-                                                blurRadius: 3,
+                                        child: Consumer<FavoriteProvider>(
+                                          builder: (context, favoriteProvider, child) {
+                                            final isFavorite = favoriteProvider.favorites.contains(recipe.id);
+                                            
+                                            return GestureDetector(
+                                              onTap: () {
+                                                favoriteProvider.toggleFavorite(recipe);
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.all(8),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey.withOpacity(0.3),
+                                                      spreadRadius: 1,
+                                                      blurRadius: 3,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Icon(
+                                                  isFavorite ? Iconsax.heart5 : Iconsax.heart,
+                                                  size: 16,
+                                                  color: isFavorite ? Colors.red : Colors.grey[600],
+                                                ),
                                               ),
-                                            ],
-                                          ),
-                                          child: Icon(
-                                            Iconsax.heart,
-                                            size: 16,
-                                            color: Colors.grey[600],
-                                          ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],

@@ -486,6 +486,84 @@ Container(
 
 ---
 
+## BONUS : FavoriteProvider (Code complet)
+
+### Fichier : lib/Provider/favorite_provider.dart
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class FavoriteProvider extends ChangeNotifier {
+  List<String> _favoriteIds = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
+  List<String> get favorites => _favoriteIds;
+  
+  void toggleFavorite(DocumentSnapshot product) async {
+    String productId = product.id;
+    if (_favoriteIds.contains(productId)) {
+      _favoriteIds.remove(productId);
+      await _removeFavorite(productId);
+    } else {
+      _favoriteIds.add(productId);
+      await _addFavorite(productId);
+    }
+    notifyListeners();
+  }
+  
+  bool isFavorited(String productId) {
+    return _favoriteIds.contains(productId);
+  }
+  
+  Future<void> _addFavorite(String productId) async {
+    try {
+      await _firestore.collection("userFavorite").doc(productId).set({'isFavorite': true});
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  
+  Future<void> _removeFavorite(String productId) async {
+    try {
+      await _firestore.collection("userFavorite").doc(productId).delete();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  
+  Future<void> loadFavorites() async {
+    try {
+      QuerySnapshot snapshot = await _firestore.collection("userFavorite").get();
+      _favoriteIds = snapshot.docs.map((doc) => doc.id).toList();
+      notifyListeners();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+}
+```
+
+### Modifier main.dart
+
+```dart
+import 'package:provider/provider.dart';
+import 'Provider/favorite_provider.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => FavoriteProvider()..loadFavorites(),
+      child: const MyApp(),
+    ),
+  );
+}
+```
+
+---
+
 **Référence ultra-rapide sans explications**  
 *Pour ceux qui veulent juste le code*
 

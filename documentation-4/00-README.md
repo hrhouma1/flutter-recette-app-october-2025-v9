@@ -62,31 +62,59 @@ Ce dossier contient des **guides pratiques** pour construire l'application de re
 
 ---
 
-## Plan de construction
+### 3. [03-GUIDE_FAVORITE_PROVIDER.md](03-GUIDE_FAVORITE_PROVIDER.md)
+
+**Guide pour ajouter système de favoris avec Provider**
+
+**Format** :
+- 9 étapes numérotées
+- Indications précises "OÙ AJOUTER"
+- Bouts de code prêts à copier
+- Très concis
+
+**Contenu** :
+- ÉTAPE 0 : Ajouter package provider
+- ÉTAPES 1-7 : Créer FavoriteProvider
+- ÉTAPE 8 : Connecter dans main.dart
+- ÉTAPE 9 : Utiliser dans app_main_screen.dart
+
+**Durée** : 30 minutes
+
+**Utilisation** :
+1. Suivre après avoir terminé le guide principal (01)
+2. Ajoute fonctionnalité de favoris
+3. Données sauvegardées dans Firestore
+4. UI se met à jour automatiquement
+
+---
+
+## Plan de construction complet
 
 ```
-┌──────────────────────────────┐
-│  Arborescence des fichiers    │
-└──────────────────────────────┘
-           ↓
-┌──────────────────────────────┐
-│   Plan de construction        │
-│   (étapes 0-16)               │
-└──────────────────────────────┘
-           ↓
-┌──────────────────────────────┐
-│   ÉTAPE 0: main.dart          │
-└──────────────────────────────┘
-           ↓
-┌──────────────────────────────┐
-│   ÉTAPES 1-16:                │
-│   app_main_screen.dart        │
-│   (ajouts progressifs)        │
-└──────────────────────────────┘
-           ↓
-┌──────────────────────────────┐
-│   APP COMPLÈTE                │
-└──────────────────────────────┘
+┌───────────────────────────────────┐
+│   GUIDE 01: App de base           │
+│   (16 bouts - 60 min)             │
+│                                   │
+│   ✅ Navigation                   │
+│   ✅ Categories (StreamBuilder)   │
+│   ✅ Recettes (StreamBuilder)     │
+│   ✅ Page View All                │
+└───────────────────────────────────┘
+                ↓
+┌───────────────────────────────────┐
+│   GUIDE 03: Favoris (optionnel)   │
+│   (9 étapes - 30 min)             │
+│                                   │
+│   ✅ FavoriteProvider             │
+│   ✅ Sauvegarde Firestore         │
+│   ✅ Coeur cliquable              │
+└───────────────────────────────────┘
+                ↓
+┌───────────────────────────────────┐
+│   APP COMPLÈTE AVEC FAVORIS       │
+└───────────────────────────────────┘
+
+GUIDE 02 : Référence rapide (tous les codes sans explications)
 ```
 
 ---
@@ -122,32 +150,42 @@ Ce dossier contient des **guides pratiques** pour construire l'application de re
 
 ## Progression recommandée
 
-### Option 1 : Faire d'abord, comprendre après
-1. **Construire** : documentation-4/01-GUIDE_CONSTRUCTION (60 min)
-2. **Comprendre** : documentation-2/02-explication_streambuilder (15 min)
-3. **Tester** : documentation-2/EXAMEN_20Q (45 min)
+### Option 1 : Construction complète
+1. **App de base** : 01-GUIDE_CONSTRUCTION (60 min)
+2. **Ajouter favoris** : 03-GUIDE_FAVORITE_PROVIDER (30 min)
+3. **Comprendre** : documentation-2/02-explication_streambuilder (15 min)
 
-**Total** : ~2 heures
+**Total** : ~1h45
 
 ---
 
-### Option 2 : Comprendre d'abord, faire après
-1. **Lire** : documentation-2/02-explication_streambuilder (15 min)
-2. **Comprendre** : documentation-2/01-arbre_widgets (20 min)
-3. **Construire** : documentation-4/01-GUIDE_CONSTRUCTION (60 min)
+### Option 2 : Construction rapide
+1. **App de base** : 01-GUIDE_CONSTRUCTION (60 min)
+2. **Tester** : Vérifier que ça fonctionne
+3. **(Optionnel) Favoris** : 03-GUIDE_FAVORITE_PROVIDER (30 min)
 
-**Total** : ~1h35
+**Total** : ~1h30
+
+---
+
+### Option 3 : Juste le code (experts)
+1. **Référence rapide** : 02-REFERENCE_RAPIDE (30 min)
+2. **Favoris** : 03-GUIDE_FAVORITE_PROVIDER (30 min)
+
+**Total** : ~1h
 
 ---
 
 ## Structure du projet final
 
-Après avoir suivi le guide, vous aurez :
+Après avoir suivi les guides, vous aurez :
 
 ```
 lib/
-├── main.dart (configuré avec Firebase)
+├── main.dart (configuré avec Firebase + Provider)
 ├── constants.dart (kprimaryColor)
+├── Provider/
+│   └── favorite_provider.dart    ← Guide 03
 └── Views/
     ├── app_main_screen.dart (475 lignes)
     │   ├── AppMainScreen + BottomNavigation
@@ -161,6 +199,8 @@ lib/
 - StreamBuilder pour categories depuis Firestore
 - StreamBuilder pour recettes filtrées depuis Firestore
 - Navigation vers page "View all"
+- **Système de favoris avec Provider** (Guide 03)
+- Favoris sauvegardés dans Firestore
 - UI complète et fonctionnelle
 
 ---

@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_rec_oct_2025_v3/firebase_options.dart';
+import 'package:provider/provider.dart';
+import 'Provider/favorite_provider.dart';
 import 'Views/app_main_screen.dart';
 
 
 
 
-void main()  async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
- await Firebase.initializeApp(
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-);
-  runApp(const MyApp());
+  );
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => FavoriteProvider()..loadFavorites(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 
