@@ -88,6 +88,31 @@ Ce dossier contient des **guides pratiques** pour construire l'application de re
 
 ---
 
+### 4. [04-GUIDE_PAGE_FAVORIS.md](04-GUIDE_PAGE_FAVORIS.md)
+
+**Guide pour créer la page des favoris**
+
+**Format** :
+- 3 étapes simples
+- Indications "OÙ AJOUTER"
+- Code complet prêt à copier
+- Interface ASCII
+
+**Contenu** :
+- ÉTAPE 1 : Créer favorite_screen.dart
+- ÉTAPE 2 : Importer dans app_main_screen.dart
+- ÉTAPE 3 : Lier à l'onglet Favorite
+
+**Durée** : 15 minutes
+
+**Utilisation** :
+1. Suivre après le Guide 03 (FavoriteProvider)
+2. Crée page pour voir tous les favoris
+3. Affiche message si vide
+4. GridView des recettes favorites
+
+---
+
 ## Plan de construction complet
 
 ```
@@ -102,12 +127,21 @@ Ce dossier contient des **guides pratiques** pour construire l'application de re
 └───────────────────────────────────┘
                 ↓
 ┌───────────────────────────────────┐
-│   GUIDE 03: Favoris (optionnel)   │
+│   GUIDE 03: Provider Favoris      │
 │   (9 étapes - 30 min)             │
 │                                   │
 │   ✅ FavoriteProvider             │
 │   ✅ Sauvegarde Firestore         │
 │   ✅ Coeur cliquable              │
+└───────────────────────────────────┘
+                ↓
+┌───────────────────────────────────┐
+│   GUIDE 04: Page Favoris          │
+│   (3 étapes - 15 min)             │
+│                                   │
+│   ✅ FavoriteScreen               │
+│   ✅ Grille de favoris            │
+│   ✅ Onglet fonctionnel           │
 └───────────────────────────────────┘
                 ↓
 ┌───────────────────────────────────┐
@@ -150,29 +184,31 @@ GUIDE 02 : Référence rapide (tous les codes sans explications)
 
 ## Progression recommandée
 
-### Option 1 : Construction complète
+### Option 1 : Construction complète (RECOMMANDÉ)
 1. **App de base** : 01-GUIDE_CONSTRUCTION (60 min)
-2. **Ajouter favoris** : 03-GUIDE_FAVORITE_PROVIDER (30 min)
-3. **Comprendre** : documentation-2/02-explication_streambuilder (15 min)
+2. **Provider favoris** : 03-GUIDE_FAVORITE_PROVIDER (30 min)
+3. **Page favoris** : 04-GUIDE_PAGE_FAVORIS (15 min)
+4. **Comprendre** : documentation-2/02-explication_streambuilder (15 min)
 
-**Total** : ~1h45
+**Total** : ~2h  
+**Résultat** : App complète fonctionnelle avec favoris
 
 ---
 
-### Option 2 : Construction rapide
+### Option 2 : Construction rapide (sans favoris)
 1. **App de base** : 01-GUIDE_CONSTRUCTION (60 min)
 2. **Tester** : Vérifier que ça fonctionne
-3. **(Optionnel) Favoris** : 03-GUIDE_FAVORITE_PROVIDER (30 min)
 
-**Total** : ~1h30
+**Total** : ~1h  
+**Résultat** : App basique fonctionnelle
 
 ---
 
-### Option 3 : Juste le code (experts)
+### Option 3 : Juste le code (experts pressés)
 1. **Référence rapide** : 02-REFERENCE_RAPIDE (30 min)
-2. **Favoris** : 03-GUIDE_FAVORITE_PROVIDER (30 min)
 
-**Total** : ~1h
+**Total** : ~30 min  
+**Résultat** : App complète avec favoris et page favoris
 
 ---
 
@@ -187,19 +223,23 @@ lib/
 ├── Provider/
 │   └── favorite_provider.dart    ← Guide 03
 └── Views/
-    ├── app_main_screen.dart (475 lignes)
+    ├── app_main_screen.dart (491 lignes)
     │   ├── AppMainScreen + BottomNavigation
     │   ├── MyAppHomeScreen + StreamBuilders
     │   └── BannerToExplore
-    └── view_all_items.dart (déjà créé)
+    ├── view_all_items.dart (avec favoris)
+    └── favorite_screen.dart      ← Guide 04
 ```
 
 **Fonctionnalités** :
 - Navigation à 4 onglets
-- StreamBuilder pour categories depuis Firestore
-- StreamBuilder pour recettes filtrées depuis Firestore
+- **Onglet Home** : Categories + Recettes (StreamBuilder)
+- **Onglet Favorite** : Page des favoris (Guide 04)
+- **Onglet Meal Plan** : Placeholder
+- **Onglet Setting** : Placeholder
 - Navigation vers page "View all"
-- **Système de favoris avec Provider** (Guide 03)
+- Système de favoris avec Provider (Guide 03)
+- Coeurs cliquables partout (rouge/gris)
 - Favoris sauvegardés dans Firestore
 - UI complète et fonctionnelle
 

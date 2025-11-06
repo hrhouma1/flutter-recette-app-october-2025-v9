@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../Provider/favorite_provider.dart';
 import 'view_all_items.dart';
+import 'favorite_screen.dart';
 
 class AppMainScreen extends StatefulWidget {
   const AppMainScreen({Key? key}) : super(key: key);
@@ -64,7 +65,9 @@ class _AppMainScreenState extends State<AppMainScreen> {
       ),
       body: selectedIndex == 0
           ? const MyAppHomeScreen()
-          : Center(child: Text("Page index: $selectedIndex")),
+          : selectedIndex == 1
+              ? const FavoriteScreen()
+              : Center(child: Text("Page index: $selectedIndex")),
     );
   }
 }
