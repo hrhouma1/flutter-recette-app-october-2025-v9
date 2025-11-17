@@ -133,14 +133,14 @@ graph TB
     A --> C[Collection: details]
     A --> D[Collection: userFavorite]
     
-    B --> B1[Document: { name: 'Breakfast' }]
-    B --> B2[Document: { name: 'Lunch' }]
+    B --> B1["Document<br/>name: Breakfast"]
+    B --> B2["Document<br/>name: Lunch"]
     
-    C --> C1["Document: recipe_id_1<br/>{ name, image, time, cal, category }"]
-    C --> C2["Document: recipe_id_2<br/>{ name, image, time, cal, category }"]
+    C --> C1["Document: recipe_id_1<br/>name, image, time<br/>cal, category"]
+    C --> C2["Document: recipe_id_2<br/>name, image, time<br/>cal, category"]
     
-    D --> D1["Document: recipe_id_1<br/>{ isFavorite: true }"]
-    D --> D2["Document: recipe_id_3<br/>{ isFavorite: true }"]
+    D --> D1["Document: recipe_id_1<br/>isFavorite: true"]
+    D --> D2["Document: recipe_id_3<br/>isFavorite: true"]
     
     style A fill:#e1f5ff
     style B fill:#fff4e1
